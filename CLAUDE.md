@@ -18,12 +18,18 @@ Working style:
 
 ## Learning curriculum
 
-학습 진행은 `LEARNING_PLAN.md` (동일 내용: `~/.claude/plans/majestic-hatching-starlight.md`) 참고.
+두 개의 문서가 쌍으로 동작한다:
+- `LEARNING_PLAN.md` — 정적 커리큘럼 (Stage 1~5 챕터, 복사-붙여넣기 프롬프트). 거의 불변.
+- `CURRENT_STATUS.md` — 동적 진행판 (지금 어디, 남은 건 뭐). 챕터마다 갱신.
 
-사용자가 "나 어디까지 했어? 다음 진행해줘" 류의 발화를 하면:
-1. `LEARNING_PLAN.md` 읽기.
-2. `chapters/` 아래 각 폴더 스캔 — `done.md` 존재 여부로 완료/미완료 판별.
-3. 현재 위치 3줄 요약 + 다음 챕터의 "복사-붙여넣기 프롬프트"를 코드펜스로 제공.
+사용자가 "나 어디까지 했어? 다음 진행해줘" / "남은 공부 뭐야?" 류 발화를 하면:
+1. `CURRENT_STATUS.md` 먼저 읽어 상태 파악.
+2. `chapters/` 스캔으로 `done.md` 유무 교차검증. 불일치 시 CURRENT_STATUS.md 를 실제 상태에 맞게 업데이트.
+3. 다음 챕터의 "복사-붙여넣기 프롬프트"를 `LEARNING_PLAN.md`에서 찾아 코드펜스로 제공.
+
+챕터 완료 후:
+- `chapters/<id>/done.md` 생성 (요약 + 핵심 배움 3줄).
+- `CURRENT_STATUS.md` 해당 챕터 행을 `✅`로 바꾸고 `Last updated` 갱신.
 
 챕터 산출물 규약: `chapters/s<stage>_<##>_<slug>/{prompt.md, notes.md, *.xml, *.py, done.md}`.
 

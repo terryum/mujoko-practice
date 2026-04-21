@@ -14,7 +14,7 @@
 
 | 영역 | 상태 | 비고 |
 |---|---|---|
-| Python 3.11 + `mujoco 3.7.0` | ✅ `~/robotics/mujoco_stack/.venv` | 이 폴더 전용 venv 없음. 공유 사용. |
+| Python 3.12 + `mujoco 3.7.0` | ✅ `~/robotics/mujoco_stack/.venv` (symlink → `.venv-312`) | 공유 사용. 이전 3.11 venv는 `.venv.bak.py311`로 백업. |
 | `mjpython` (macOS viewer 메인스레드) | ✅ `~/robotics/mujoco_stack/.venv/bin/mjpython` | Stage 1 전 챕터에서 계속 사용. |
 | `mujoco.viewer`, `mujoco.Renderer`, `mediapy` | ✅ | 스크립트 `scripts/run_hello.py`, `scripts/render_hello.py`가 레퍼런스. |
 | `dm_control`, `mink`, `pin`, `casadi`, `osqp`, `qpsolvers[daqp]`, `robot_descriptions`, `jupyterlab`, `rerun-sdk` | ✅ | Stage 2~3에서 유용. |
@@ -265,7 +265,7 @@ Chapter s1_08 (sjchoi86 tutorial).
 1. chapters/s1_08_sjchoi86/ 생성.
 2. 다음 repo를 clone: https://github.com/sjchoi86/yet-another-mujoco-tutorial-v3
    → ~/robotics/external/yet-another-mujoco-tutorial-v3 에 (이미 있으면 건너뜀).
-3. 그 repo의 README에서 가장 기초 노트북 3개 식별. Jupyter kernel "MuJoCo Stack (Py 3.11)"로 실행.
+3. 그 repo의 README에서 가장 기초 노트북 3개 식별. Jupyter kernel "MuJoCo Stack (Py 3.12)"로 실행.
 4. 각 노트북당 notes.md 에 3줄: 주제 / 사용 API / 놓치면 안 될 트릭.
 5. done.md.
 ```
