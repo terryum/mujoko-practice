@@ -1,0 +1,65 @@
+<!--
+  hello_world.xml — MuJoCo 학습용 최소 MJCF 예제.
+
+  구성 요소:
+    1) 바닥 (plane) — 접촉 관찰용.
+    2) hinge 관절을 가진 막대(pendulum) + motor actuator
+       → qpos(1), qvel(1), actuator force(1)을 눈으로 바로 볼 수 있음.
+    3) free joint를 가진 공(ball)
+       → free joint이므로 qpos 7개(xyz 3 + quaternion 4), qvel 6개(lin 3 + ang 3) 추가.
+       → 공이 바닥으로 떨어지면서 contact가 생김.
+
+  이후 실험 포인트(단순 구조를 유지하기 위한 지점):
+    - pendulum body의 <inertial> 혹은 geom density/size로 mass 변경
+    - hinge joint의 damping 변경
+    - floor/ball의 geom friction 변경
+    - actuator의 gear / ctrlrange / kv 등 변경
+    - ball의 초기 pos/quat 변경
+-->
+
+<mujoco model="hello_world">
+
+  <!-- 적분기/타임스텝 등 전역 옵션. 값을 바꾸면 수치 안정성·속도가 달라진다. -->
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="implicitfast"/>
+
+  <!-- 시각 품질 관련(헤드리스에서는 무시됨). -->
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3"/>
+    <global azimuth="120" elevation="-20"/>
+  </visual>
+
+  <!-- geom 공통 속성: friction = (slide, spin, roll). 필요하면 per-geom으로 덮어씀. -->
+  <default>
+    <geom friction="1.0 0.005 0.0001" solref="0.01 1" solimp="0.9 0.95 0.001"/>
+    <joint damping="0.1"/>
+  </default>
+
+  <worldbody>
+    <!-- 1) 바닥. plane은 z=0 반무한 평면. size=(x, y, gridSpacing)이지만 물리에는 영향 없음. -->
+    <geom name="floor" type="plane" size="2 2 0.1" rgba="0.85 0.9 0.85 1"/>
+
+    <!-- 2) 벽걸이 막대(pendulum).
+         world에 붙은 body이고 hinge 축은 y축이라 xz 평면에서 흔들린다.
+         geom capsule의 size="radius halflength" 이므로 길이 = 2*halflength. -->
+    <body name="pendulum" pos="0 0 1.0">
+      <joint name="hinge" type="hinge" axis="0 1 0" damping="0.05"/>
+      <!-- 막대의 기하학: 반지름 0.04, 반길이 0.25 → 전체 길이 0.5.
+           fromto로 지정해 body origin에서 아래쪽(-z)로 뻗게 했다. -->
+      <geom name="rod" type="capsule" fromto="0 0 0  0 0 -0.5" size="0.04"
+            rgba="0.8 0.2 0.2 1"/>
+    </body>
+
+    <!-- 3) 공중에서 떨어지는 공(free body).
+         freejoint를 명시하면 이 body는 3자유도 병진 + 3자유도 회전을 갖는다 (qpos 7, qvel 6). -->
+    <body name="ball" pos="0.3 0 1.2">
+      <freejoint name="ball_free"/>
+      <geom name="ball_geom" type="sphere" size="0.08" rgba="0.2 0.5 0.9 1"/>
+    </body>
+  </worldbody>
+
+  <!-- hinge에 달린 motor. ctrl은 torque로 해석됨. gear로 스케일링. -->
+  <actuator>
+    <motor name="hinge_motor" joint="hinge" gear="1" ctrlrange="-1 1" ctrllimited="true"/>
+  </actuator>
+
+</mujoco>
